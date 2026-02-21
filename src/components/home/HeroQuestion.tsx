@@ -10,7 +10,8 @@ interface Props {
 export default function HeroQuestion({ q, onNext }: Props) {
   const [sel, setSel] = useState<string | null>(null);
   const [done, setDone] = useState(false);
-  const isOk = sel === q.correct;
+  const correctId = Array.isArray(q.correct) ? q.correct[0] : q.correct;
+  const isOk = sel === correctId;
 
   return (
     <div style={{ animation: "fadeUp 0.35s ease forwards" }}>
@@ -22,12 +23,12 @@ export default function HeroQuestion({ q, onNext }: Props) {
       <div className="flex flex-col gap-[5px] mb-3">
         {q.choices.map((c) => {
           let cls = "qc";
-          if (done) { if (c.id === q.correct) cls += " ok"; else if (c.id === sel) cls += " no"; else cls += " dim"; }
+          if (done) { if (c.id === correctId) cls += " ok"; else if (c.id === sel) cls += " no"; else cls += " dim"; }
           else if (sel === c.id) cls += " sel";
           return (
             <button key={c.id} className={cls} onClick={() => !done && setSel(c.id)} disabled={done} style={{ padding: "10px 12px", fontSize: 13 }}>
               <span className="ql" style={{ width: 20, height: 20, fontSize: 10 }}>
-                {done && c.id === q.correct ? <Check size={11} /> : done && c.id === sel && !isOk ? <X size={11} /> : c.id.toUpperCase()}
+                {done && c.id === correctId ? <Check size={11} /> : done && c.id === sel && !isOk ? <X size={11} /> : c.id.toUpperCase()}
               </span>
               <span>{c.t}</span>
             </button>

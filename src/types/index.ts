@@ -17,10 +17,10 @@ export interface Question {
   cat: string;
   stem: string;
   choices: Choice[];
-  correct: string;
+  correct: string | string[];
   rationale: string;
-  whyNot?: Record<string, string>;
-  keyConcept: string;
+  whyNot?: Record<string, string> | null;
+  keyConcept?: string | null;
 }
 
 export interface Testimonial {
@@ -46,7 +46,7 @@ export interface PricingPlan {
 
 export interface UserAnswer {
   questionId: number;
-  selected: string;
+  selected: string | string[];
   confidence: "guess" | "unsure" | "confident" | null;
   correct: boolean;
   cat: string;

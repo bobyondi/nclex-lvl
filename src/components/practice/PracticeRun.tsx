@@ -1,0 +1,180 @@
+import { useState, useEffect, useRef } from "react";
+import { ArrowLeft, Check, X, ArrowRight, Clock } from "lucide-react";
+import type { UserAnswer, Question } from "@/types";
+import { PRACTICE_BANKS } from "@/data/questionBank";
+import { shuffle, formatTime } from "@/lib/utils";
+
+interface Props {
+  bank: string;
+  count?: number;
+  questions?: Question[];
+  onComplete: (answers: UserAnswer[], elapsed: number) => void;
+  onExit?: () => void;
+  sessionLabel?: string;
+}
+
+export default function PracticeRun({ bank, count = 10, questions, onComplete, onExit, sessionLabel }: Props) {
+  const [qs] = useState(() => {
+    if (questions && questions.length > 0) return questions;
+    return shuffle(PRACTICE_BANKS[bank] || PRACTICE_BANKS.mixed).slice(0, count);
+  });
+  const [idx, setIdx] = useState(0);
+  const [answers, setAnswers] = useState<UserAnswer[]>([]);
+  const [sel, setSel] = useState<string | string[] | null>(null);
+  const [conf, setConf] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const cfs = [
+    { k: "guess", l: "Guessing", c: "var(--nclex-red)", bg: "var(--red-s)" },
+    { k: "unsure", l: "Unsure", c: "hsl(var(--primary))", bg: "var(--accent-s)" },
+    { k: "confident", l: "Confident", c: "var(--teal)", bg: "var(--teal-s)" },
+  ];
+
+  useEffect(() => {
+    timer.current = setInterval(() => setElapsed((e) => e + 1), 1000);
+    return () => { if (timer.current) clearInterval(timer.current); };
+  }, []);
+
+  useEffect(() => {
+    setSel(null);
+    setConf(null);
+    setDone(false);
+  }, [idx]);
+
+  const submit = () => {
+    if (Array.isArray(sel)) {
+      if (sel.length > 0) setDone(true);
+    } else if (sel) setDone(true);
+  };
+
+  const next = () => {
+    const q = qs[idx];
+    const correctArr = Array.isArray(q.correct) ? q.correct : [q.correct];
+    const selectedArr = Array.isArray(sel) ? sel : sel ? [sel] : [];
+    const isCorrect = selectedArr.length > 0 && selectedArr.every((s) => correctArr.includes(s)) && selectedArr.length === correctArr.length;
+    const na: UserAnswer[] = [...answers, { questionId: q.id, selected: sel!, confidence: conf as any, correct: isCorrect, cat: q.cat }];
+    setAnswers(na);
+    if (idx + 1 < qs.length) setIdx(idx + 1);
+    else {
+      if (timer.current) clearInterval(timer.current);
+      onComplete(na, elapsed);
+    }
+  };
+
+  const q = qs[idx];
+  if (!q) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-10">
+        <div className="max-w-[420px] w-full text-center">
+          <h2 className="text-[22px] font-extrabold mb-2" style={{ letterSpacing: "-0.03em" }}>No questions found</h2>
+          <p className="text-[13px] mb-5" style={{ color: "var(--text-secondary)" }}>We couldn't load questions for this category yet.</p>
+          {onExit && <button className="btn btn-p" onClick={onExit} style={{ padding: "12px 18px", borderRadius: 12 }}>Back to dashboard</button>}
+        </div>
+      </div>
+    );
+  }
+  const correctArr = Array.isArray(q.correct) ? q.correct : [q.correct];
+  const selectedArr = Array.isArray(sel) ? sel : sel ? [sel] : [];
+  const isOk = selectedArr.length > 0 && selectedArr.every((s) => correctArr.includes(s)) && selectedArr.length === correctArr.length;
+  const isMulti = Array.isArray(q.correct);
+  const wrongSel = Array.isArray(sel) ? sel.find((s) => !correctArr.includes(s)) : typeof sel === "string" && !correctArr.includes(sel) ? sel : null;
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <div className="sticky top-0 z-50" style={{ borderBottom: "1px solid hsl(var(--border))", background: "rgba(251,247,243,0.95)", backdropFilter: "blur(12px)" }}>
+        <div className="max-w-[1100px] mx-auto flex justify-between items-center" style={{ padding: "12px 24px" }}>
+          <div className="flex items-center gap-3">
+            {onExit && (
+              <button className="btn btn-g" onClick={onExit} style={{ padding: "8px 10px", borderRadius: 8 }}>
+                <ArrowLeft size={14} />
+              </button>
+            )}
+            <span className="text-[13px] font-bold">{idx + 1}<span style={{ color: "var(--text-tertiary)" }}>/{qs.length}</span></span>
+            <span className="text-[11px] font-semibold text-primary" style={{ background: "var(--accent-s)", padding: "3px 10px", borderRadius: 100 }}>{q.cat}</span>
+          </div>
+          <div className="flex items-center gap-[10px]">
+            <span className="text-[12px] hidden md:inline" style={{ color: "var(--text-secondary)" }}>{sessionLabel || "Practice session"}</span>
+            <span className="flex items-center gap-1 text-[13px]" style={{ color: "var(--text-tertiary)" }}><Clock size={13} />{formatTime(elapsed)}</span>
+          </div>
+        </div>
+        <div className="h-[3px]" style={{ background: "hsl(var(--border))" }}>
+          <div className="h-full transition-all duration-400" style={{ width: `${((idx + (done ? 1 : 0.5)) / qs.length) * 100}%`, background: "linear-gradient(90deg, hsl(var(--primary)), var(--teal))" }} />
+        </div>
+      </div>
+
+      <div className="max-w-[640px] mx-auto flex-1 px-6 pt-7 pb-10" key={idx}>
+        <h2 className="text-[17px] font-semibold leading-relaxed mb-5" style={{ animation: "fadeUp 0.35s ease" }}>{q.stem}</h2>
+        <div className="flex flex-col gap-[7px] mb-5">
+          {q.choices.map((c) => {
+            let cls = "qc";
+            const isCorrectChoice = correctArr.includes(c.id);
+            const isSelected = selectedArr.includes(c.id);
+            if (done) {
+              if (isCorrectChoice) cls += " ok";
+              else if (isSelected) cls += " no";
+              else cls += " dim";
+            } else if (isSelected) cls += " sel";
+            return (
+              <button
+                key={c.id}
+                className={cls}
+                onClick={() => {
+                  if (done) return;
+                  if (!isMulti) setSel(c.id);
+                  else {
+                    const cur = Array.isArray(sel) ? sel : [];
+                    setSel(cur.includes(c.id) ? cur.filter((x) => x !== c.id) : [...cur, c.id]);
+                  }
+                }}
+                disabled={done}
+              >
+                <span className="ql">{done && isCorrectChoice ? <Check size={13} /> : done && isSelected && !isOk ? <X size={13} /> : c.id.toUpperCase()}</span>
+                <span>{c.t}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {!done && (
+          <div>
+            <div className="flex items-center justify-between mb-[7px]">
+              <span className="text-[11px] font-bold uppercase" style={{ color: "var(--text-tertiary)", letterSpacing: "0.08em" }}>How confident are you?</span>
+              <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>{isMulti ? "Select all that apply" : "Optional"}</span>
+            </div>
+            <div className="flex gap-[7px] mb-[14px]">
+              {cfs.map((cl) => (
+                <button key={cl.k} className="cf" onClick={() => setConf(cl.k)} style={{ color: conf === cl.k ? cl.c : undefined, borderColor: conf === cl.k ? cl.c : undefined, background: conf === cl.k ? cl.bg : undefined }}>{cl.l}</button>
+              ))}
+            </div>
+            <button className={`btn ${selectedArr.length > 0 ? "btn-p" : "btn-d"}`} onClick={submit} style={{ width: "100%", padding: 15, borderRadius: 12, fontSize: 15 }}>Check Answer</button>
+          </div>
+        )}
+
+        {done && (
+          <div className="flex flex-col gap-3" style={{ animation: "scaleIn 0.3s ease" }}>
+            <div className="rounded-xl" style={{ background: isOk ? "var(--green-s)" : "var(--red-s)", border: `1px solid ${isOk ? "rgba(26,122,110,0.12)" : "rgba(201,68,82,0.1)"}`, padding: "18px 20px" }}>
+              <div className="font-bold text-[15px] mb-2" style={{ color: isOk ? "var(--teal)" : "var(--nclex-red)" }}>{isOk ? "Correct!" : "Not quite."}</div>
+              <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{q.rationale}</p>
+            </div>
+            {!isOk && wrongSel && q.whyNot?.[wrongSel] && (
+              <div className="rounded-xl" style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", padding: "16px 20px", animation: "fadeIn 0.3s ease 0.1s forwards", opacity: 0 }}>
+                <div className="font-bold text-[13px] mb-[6px]">Why {wrongSel.toUpperCase()} is wrong:</div>
+                <p className="text-[13px] leading-[1.55]" style={{ color: "var(--text-secondary)" }}>{q.whyNot[wrongSel]}</p>
+              </div>
+            )}
+            {q.keyConcept && (
+              <div className="rounded-xl" style={{ background: "var(--gold-s)", border: "1px solid rgba(196,155,47,0.15)", padding: "16px 20px", animation: "fadeIn 0.3s ease 0.15s forwards", opacity: 0 }}>
+                <div className="font-bold text-[13px] mb-[6px]" style={{ color: "var(--gold)" }}>Key Takeaway</div>
+                <p className="text-[13px] leading-[1.55]" style={{ color: "var(--text-secondary)" }}>{q.keyConcept}</p>
+              </div>
+            )}
+            <button className="btn btn-p" onClick={next} style={{ width: "100%", padding: 15, borderRadius: 12, fontSize: 15 }}>
+              {idx + 1 < qs.length ? "Next Question" : "See my results"} <ArrowRight size={16} />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

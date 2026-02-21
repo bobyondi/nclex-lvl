@@ -1,4 +1,7 @@
 import { ArrowRight, Bell } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { savePlan, stashPendingPlan } from "@/lib/plan";
+import { supabase } from "@/lib/supabase";
 import type { OnboardingData } from "@/types";
 
 interface Props {
@@ -12,6 +15,7 @@ interface Props {
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function ScheduleSetup({ data, setData, studyDays, setStudyDays, ProgressBar }: Props) {
+  const navigate = useNavigate();
   const toggle = (d: string) => setStudyDays((prev) => prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]);
 
   return (
@@ -47,7 +51,23 @@ export default function ScheduleSetup({ data, setData, studyDays, setStudyDays, 
             </div>
           </div>
 
-          <button className="btn btn-p" style={{ width: "100%", padding: 15, borderRadius: 12 }}>Start my plan <ArrowRight size={16} /></button>
+          <button
+            className="btn btn-p"
+            onClick={async () => {
+              const { data: auth } = await supabase.auth.getSession();
+              const plan = { data, studyDays, createdAt: new Date().toISOString() };
+              if (!auth.session) {
+                stashPendingPlan(plan);
+                navigate("/login", { state: { from: "/study" } });
+                return;
+              }
+              await savePlan(plan);
+              navigate("/study");
+            }}
+            style={{ width: "100%", padding: 15, borderRadius: 12 }}
+          >
+            Start my plan <ArrowRight size={16} />
+          </button>
           <p className="text-center text-[12px] mt-[10px]" style={{ color: "var(--text-tertiary)" }}>You're on track — your next step is always ready.</p>
         </div>
       </div>
