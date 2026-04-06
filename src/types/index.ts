@@ -21,6 +21,8 @@ export interface Question {
   rationale: string;
   whyNot?: Record<string, string> | null;
   keyConcept?: string | null;
+  imageUrl?: string;
+  imageAlt?: string;
 }
 
 export interface Testimonial {

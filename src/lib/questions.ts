@@ -2,6 +2,7 @@ import type { Question } from "@/types";
 import { supabase } from "@/lib/supabase";
 import { shuffle } from "@/lib/utils";
 import { PRACTICE_BANKS } from "@/data/questionBank";
+import { getSubjectBankIdsByKey } from "@/data/categoryToSubject";
 
 const parseJsonMaybe = <T,>(value: any, fallback: T): T => {
   if (value === null || value === undefined) return fallback;
@@ -62,10 +63,13 @@ const normalizeFromStem = (row: any) => {
 };
 
 export async function fetchQuestions(bank: string, count: number): Promise<Question[]> {
+  const mappedBanks = getSubjectBankIdsByKey(bank);
+  const bankFilter = mappedBanks.length ? mappedBanks : [bank];
+
   const { data, error } = await supabase
     .from("questions")
     .select("id, bank, cat, stem, choices, correct, rationale, why_not, key_concept")
-    .eq("bank", bank);
+    .in("bank", bankFilter);
 
   if (!error && data && data.length > 0) {
     const mapped = data.map((row: any) => ({
@@ -86,6 +90,11 @@ export async function fetchQuestions(bank: string, count: number): Promise<Quest
       return { ...q, ...repaired };
     });
     return shuffle(normalized).slice(0, count);
+  }
+
+  if (mappedBanks.length) {
+    const merged = mappedBanks.flatMap((id) => PRACTICE_BANKS[id] || []);
+    if (merged.length) return shuffle(merged).slice(0, count);
   }
 
   const local = PRACTICE_BANKS[bank] || PRACTICE_BANKS.mixed || [];

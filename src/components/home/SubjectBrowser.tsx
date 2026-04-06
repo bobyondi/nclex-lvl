@@ -2,6 +2,8 @@ import { useState } from "react";
 import { ChevronDown, ChevronRight, Lock, Activity, Heart, Sparkles, Star, BookOpen, Brain, Shield, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { SUBJECTS } from "@/data/subjects";
+import { PRACTICE_CATEGORIES } from "@/data/questionBank";
+import { countQuestionsBySubject, getUnmappedCategoryIds } from "@/data/categoryToSubject";
 import SectionHeading from "@/components/shared/SectionHeading";
 
 const iconMap: Record<string, React.ElementType> = { Activity, Heart, Sparkles, Star, BookOpen, Brain, Shield, Target };
@@ -9,6 +11,8 @@ const iconMap: Record<string, React.ElementType> = { Activity, Heart, Sparkles, 
 export default function SubjectBrowser() {
   const navigate = useNavigate();
   const [open, setOpen] = useState<string | null>(null);
+  const subjectCounts = countQuestionsBySubject(PRACTICE_CATEGORIES);
+  const unmapped = getUnmappedCategoryIds(PRACTICE_CATEGORIES.map((c) => c.id));
 
   const handleSubtopicClick = (subject: typeof SUBJECTS[0], subtopic: string) => {
     navigate("/login", { state: { subject, subtopic } });
@@ -17,10 +21,18 @@ export default function SubjectBrowser() {
   return (
     <section id="subjects" className="border-t border-b" style={{ padding: "56px 0", background: "hsl(var(--background-alt))", borderColor: "hsl(var(--border))" }}>
       <div className="max-w-[1100px] mx-auto px-6">
-        <SectionHeading center sub="Explore every NCLEX category. Click a subject to see subtopics — sign in to access practice questions.">All NCLEX subjects, organized.</SectionHeading>
+        <SectionHeading center sub="Explore every NCLEX category. Click a subject to see subtopics — sign in to access practice questions.">
+          All NCLEX subjects, organized.
+        </SectionHeading>
+        <div className="text-center mb-4 text-[12px]" style={{ color: unmapped.length ? "var(--nclex-red)" : "var(--text-tertiary)" }}>
+          {unmapped.length === 0
+            ? "Category coverage: 100% mapped into the 8 NCLEX subjects."
+            : `Category coverage warning: ${unmapped.length} category IDs are not mapped.`}
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px]">
           {SUBJECTS.map((s) => {
             const Icon = iconMap[s.icon] || BookOpen;
+            const qCount = subjectCounts[s.id] || 0;
             return (
               <div key={s.id} className={`subj-card${open === s.id ? " open" : ""}`}>
                 <button className="subj-btn" onClick={() => setOpen(open === s.id ? null : s.id)}>
@@ -29,7 +41,9 @@ export default function SubjectBrowser() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-[14px]">{s.name}</div>
-                    <div className="text-[11px] leading-tight" style={{ color: "var(--text-tertiary)" }}>{s.subtopics.length} subtopics</div>
+                    <div className="text-[11px] leading-tight" style={{ color: "var(--text-tertiary)" }}>
+                      {s.subtopics.length} subtopics · {qCount.toLocaleString()} questions
+                    </div>
                   </div>
                   <ChevronDown size={14} className="flex-shrink-0 transition-transform duration-200" style={{ color: "var(--text-tertiary)", transform: open === s.id ? "rotate(180deg)" : "none" }} />
                 </button>

@@ -19,6 +19,11 @@ export default function HeroQuestion({ q, onNext }: Props) {
         <span className="text-[11px] font-bold uppercase text-primary" style={{ letterSpacing: "0.08em" }}>{q.cat}</span>
         <span className="text-[11px] font-semibold" style={{ color: "var(--text-tertiary)" }}>NCLEX-Style</span>
       </div>
+      {q.imageUrl && (
+        <div className="mb-3 rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--border))", background: "hsl(var(--background))" }}>
+          <img src={q.imageUrl} alt={q.imageAlt || "Question visual"} style={{ width: "100%", height: "auto", display: "block" }} />
+        </div>
+      )}
       <p className="text-[14px] font-semibold leading-[1.55] mb-[14px]">{q.stem}</p>
       <div className="flex flex-col gap-[5px] mb-3">
         {q.choices.map((c) => {

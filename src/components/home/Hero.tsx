@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowRight, Activity, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { HERO_QUESTIONS } from "@/data/questions";
+import { PRACTICE_BANKS } from "@/data/questionBank";
+import { getSubjectBankIdsByKey } from "@/data/categoryToSubject";
+import { shuffle } from "@/lib/utils";
+import type { Question } from "@/types";
 import HeroQuestion from "./HeroQuestion";
 
 const focusOpts = [
@@ -16,15 +20,57 @@ const focusOpts = [
   { k: "management", l: "Management of Care" },
 ];
 
+const decorateHeroVisual = (q: Question): Question => {
+  const text = `${q.stem} ${q.keyConcept || ""}`.toLowerCase();
+  if (/ecg|rhythm|ventricular|telemetry|defibrillation|v-fib|vfib/.test(text)) {
+    return { ...q, imageUrl: "/hero-images/ecg-strip.svg", imageAlt: "ECG rhythm strip" };
+  }
+  if (/fetal|labor|deceleration|contraction|newborn|nasal flaring|grunting/.test(text)) {
+    return { ...q, imageUrl: "/hero-images/fetal-monitor.svg", imageAlt: "Fetal monitor tracing" };
+  }
+  if (/fracture|hip|musculoskeletal|x-ray|bone/.test(text)) {
+    return { ...q, imageUrl: "/hero-images/hip-xray.svg", imageAlt: "Hip x-ray style image" };
+  }
+  return q;
+};
+
+const buildHeroPool = (focus: string): Question[] => {
+  const bankIds = focus === "mixed"
+    ? Object.keys(PRACTICE_BANKS)
+    : getSubjectBankIdsByKey(focus);
+
+  const raw = bankIds.flatMap((id) => PRACTICE_BANKS[id] || []);
+  const valid = raw.filter((q) => q?.stem && q?.choices?.length >= 4 && q?.rationale);
+
+  const deduped = new Map<string, Question>();
+  for (const q of valid) {
+    const key = q.stem.trim().toLowerCase();
+    if (!deduped.has(key)) deduped.set(key, q);
+  }
+
+  const sampled = shuffle(Array.from(deduped.values())).slice(0, 36).map(decorateHeroVisual);
+  if (sampled.length >= 3) return sampled;
+
+  const fallback = HERO_QUESTIONS[focus] || HERO_QUESTIONS.mixed;
+  return fallback.map(decorateHeroVisual);
+};
+
 export default function Hero() {
   const navigate = useNavigate();
   const [focus, setFocus] = useState("mixed");
   const [qi, setQi] = useState(0);
   const [k, setK] = useState(0);
 
-  const qs = HERO_QUESTIONS[focus] || HERO_QUESTIONS.mixed;
-  const handleFocusChange = (newFocus: string) => { setFocus(newFocus); setQi(0); setK((k) => k + 1); };
-  const next = () => { setQi((i) => (i + 1) % qs.length); setK((k) => k + 1); };
+  const qs = useMemo(() => buildHeroPool(focus), [focus]);
+  const handleFocusChange = (newFocus: string) => {
+    setFocus(newFocus);
+    setQi(0);
+    setK((n) => n + 1);
+  };
+  const next = () => {
+    setQi((i) => (i + 1) % qs.length);
+    setK((n) => n + 1);
+  };
 
   return (
     <section className="relative overflow-hidden" style={{ padding: "56px 0 48px" }}>
