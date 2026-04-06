@@ -1,0 +1,87 @@
+# Gold Question Generation Report
+
+- source_rows: 1695
+- kept_rows: 1332
+- dropped_rows: 363
+- repaired_stem: 1322
+- repaired_correct: 0
+- repaired_rationale: 32
+- dropped_noisy_choice: 362
+
+## Drop Reasons
+- noisy_choice: 362
+- bad_stem: 1
+
+## Top Banks (kept)
+- nclex_19_health_promotion_maint: 145
+- nclex_10_ante_neonatal_care: 116
+- nclex_12_cardiovascular: 99
+- leadership: 87
+- nclex_24_leadership_mgt: 86
+- nclex_16_gastrointenstinal: 79
+- nclex_15_endoctrine: 75
+- emergency_care: 58
+- nutrition: 55
+- hematologic: 53
+- psychosocial_integrity: 53
+- muscoskeletal: 49
+- safe_and_effective_care_environment: 46
+- neurological: 43
+- physiological_integrity_basic_care_integrity: 40
+- integuement: 35
+- genital_reproductive: 27
+- gerontology: 25
+- pre_post_operative: 24
+- nclex_13_critical_care: 22
+
+## Sample Dropped Items
+- id=10010 bank=emergency_care reason=noisy_choice
+- id=10014 bank=emergency_care reason=noisy_choice
+- id=10017 bank=emergency_care reason=noisy_choice
+- id=10018 bank=emergency_care reason=noisy_choice
+- id=10027 bank=emergency_care reason=noisy_choice
+- id=10030 bank=emergency_care reason=noisy_choice
+- id=10031 bank=emergency_care reason=noisy_choice
+- id=10032 bank=emergency_care reason=noisy_choice
+- id=10034 bank=emergency_care reason=noisy_choice
+- id=10035 bank=emergency_care reason=noisy_choice
+- id=10037 bank=emergency_care reason=noisy_choice
+- id=10039 bank=emergency_care reason=noisy_choice
+- id=10041 bank=emergency_care reason=noisy_choice
+- id=10048 bank=emergency_care reason=noisy_choice
+- id=10050 bank=emergency_care reason=noisy_choice
+- id=10053 bank=emergency_care reason=noisy_choice
+- id=10054 bank=emergency_care reason=noisy_choice
+- id=10055 bank=emergency_care reason=noisy_choice
+- id=10058 bank=emergency_care reason=noisy_choice
+- id=10059 bank=emergency_care reason=noisy_choice
+- id=10067 bank=emergency_care reason=bad_stem
+- id=10068 bank=emergency_care reason=noisy_choice
+- id=10077 bank=emergency_care reason=noisy_choice
+- id=10080 bank=emergency_care reason=noisy_choice
+- id=10089 bank=genital_reproductive reason=noisy_choice
+- id=10095 bank=genital_reproductive reason=noisy_choice
+- id=10096 bank=genital_reproductive reason=noisy_choice
+- id=10100 bank=genital_reproductive reason=noisy_choice
+- id=10115 bank=gerontology reason=noisy_choice
+- id=10116 bank=gerontology reason=noisy_choice
+- id=10126 bank=gerontology reason=noisy_choice
+- id=10131 bank=gerontology reason=noisy_choice
+- id=10142 bank=hematologic reason=noisy_choice
+- id=10152 bank=hematologic reason=noisy_choice
+- id=10157 bank=hematologic reason=noisy_choice
+- id=10162 bank=hematologic reason=noisy_choice
+- id=10166 bank=hematologic reason=noisy_choice
+- id=10175 bank=hematologic reason=noisy_choice
+- id=10177 bank=hematologic reason=noisy_choice
+- id=10188 bank=hematologic reason=noisy_choice
+- id=10194 bank=hematologic reason=noisy_choice
+- id=10198 bank=hematologic reason=noisy_choice
+- id=10213 bank=integuement reason=noisy_choice
+- id=10215 bank=integuement reason=noisy_choice
+- id=10222 bank=integuement reason=noisy_choice
+- id=10224 bank=integuement reason=noisy_choice
+- id=10225 bank=integuement reason=noisy_choice
+- id=10227 bank=integuement reason=noisy_choice
+- id=10233 bank=integuement reason=noisy_choice
+- id=10235 bank=integuement reason=noisy_choice
