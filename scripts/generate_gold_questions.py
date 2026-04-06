@@ -63,6 +63,17 @@ def clean_text(text: str) -> str:
     return squash_ws(t)
 
 
+def clean_choice_text(text: str) -> str:
+    t = clean_text(text)
+    # Remove common OCR score overlays and grading labels.
+    t = re.sub(r"\b\d+%\b", " ", t)
+    t = re.sub(r"\b(hard|moderate|easy)\b", " ", t, flags=re.I)
+    t = re.sub(r"\b(all|peer)\b", " ", t, flags=re.I)
+    t = re.sub(r"[|]+", " ", t)
+    t = squash_ws(t)
+    return t
+
+
 def strip_options_from_stem(stem: str) -> str:
     # If options got appended to stem (e.g., "O A. ... O B. ..."), trim at first option marker.
     markers = [
@@ -131,7 +142,7 @@ def normalize_choices(raw_choices: str) -> list[dict[str, str]]:
         if not isinstance(item, dict):
             continue
         cid = str(item.get("id", "")).strip().lower()
-        txt = clean_text(str(item.get("t", "")).strip())
+        txt = clean_choice_text(str(item.get("t", "")).strip())
         if cid not in {"a", "b", "c", "d", "e", "f", "g"}:
             continue
         if not txt:
@@ -148,8 +159,11 @@ def merge_choices(choice_list: list[dict[str, str]], stem_options: dict[str, str
 
     # Fill missing choices from stem-parsed options.
     for cid, txt in stem_options.items():
-        if cid not in by_id or len(by_id[cid]) < 12:
-            by_id[cid] = txt
+        cleaned = clean_choice_text(txt)
+        if not cleaned:
+            continue
+        if cid not in by_id or len(by_id[cid]) < 12 or is_noisy_choice(by_id[cid]):
+            by_id[cid] = cleaned
 
     # Ensure all correct letters exist as fallback placeholders.
     for cid in correct_letters:
@@ -211,7 +225,11 @@ def is_noisy_choice(text: str) -> bool:
         return True
     if "peer comparison" in t.lower() or "browse mode" in t.lower():
         return True
+    if re.match(r"^[ivx]+\b", t.lower()):
+        return True
     if t.lower().startswith(("i ", "ii ", "iii ")):
+        return True
+    if len(t) < 4:
         return True
     return False
 
@@ -236,12 +254,29 @@ def build_gold(csv_path: Path) -> tuple[dict[str, list[dict[str, Any]]], list[di
             correct_letters = parse_correct_letters(row.get("correct", ""))
             choices = normalize_choices(row.get("choices", ""))
             stem_options = parse_options_from_stem(stem_raw)
-            choices = merge_choices(choices, stem_options, correct_letters)
+
+            # Prefer stem-derived options when available; they are often cleaner than OCR'd choices JSON.
+            if len(stem_options) >= 2:
+                stem_choice_list = [{"id": k, "t": clean_choice_text(v)} for k, v in sorted(stem_options.items())]
+                stem_choice_list = [c for c in stem_choice_list if c["t"]]
+                choices = merge_choices(stem_choice_list, stem_options, correct_letters)
+            else:
+                choices = merge_choices(choices, stem_options, correct_letters)
             if len(choices) < 2:
                 stats.dropped_rows += 1
                 stats.dropped_bad_choices += 1
                 dropped.append({"id": qid_raw, "bank": bank, "reason": "bad_choices"})
                 continue
+            # Remove noisy distractors when enough clean options remain.
+            filtered = [c for c in choices if not is_noisy_choice(c["t"])]
+            filtered_ids = {c["id"] for c in filtered}
+            if isinstance(normalize_correct(row.get("correct", ""), choices), list):
+                needed = set(parse_correct_letters(row.get("correct", "")))
+            else:
+                needed = set(parse_correct_letters(row.get("correct", ""))[:1])
+            if len(filtered) >= 2 and needed.issubset(filtered_ids):
+                choices = filtered
+
             if any(is_noisy_choice(c["t"]) for c in choices):
                 stats.dropped_rows += 1
                 stats.dropped_noisy_choice += 1

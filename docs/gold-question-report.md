@@ -1,87 +1,46 @@
 # Gold Question Generation Report
 
 - source_rows: 1695
-- kept_rows: 1332
-- dropped_rows: 363
-- repaired_stem: 1322
+- kept_rows: 1686
+- dropped_rows: 9
+- repaired_stem: 1677
 - repaired_correct: 0
-- repaired_rationale: 32
-- dropped_noisy_choice: 362
+- repaired_rationale: 48
+- dropped_noisy_choice: 8
 
 ## Drop Reasons
-- noisy_choice: 362
+- noisy_choice: 8
 - bad_stem: 1
 
 ## Top Banks (kept)
-- nclex_19_health_promotion_maint: 145
-- nclex_10_ante_neonatal_care: 116
-- nclex_12_cardiovascular: 99
-- leadership: 87
-- nclex_24_leadership_mgt: 86
-- nclex_16_gastrointenstinal: 79
-- nclex_15_endoctrine: 75
-- emergency_care: 58
-- nutrition: 55
-- hematologic: 53
-- psychosocial_integrity: 53
-- muscoskeletal: 49
-- safe_and_effective_care_environment: 46
-- neurological: 43
-- physiological_integrity_basic_care_integrity: 40
-- integuement: 35
-- genital_reproductive: 27
-- gerontology: 25
-- pre_post_operative: 24
-- nclex_13_critical_care: 22
+- nclex_19_health_promotion_maint: 187
+- nclex_10_ante_neonatal_care: 137
+- nclex_12_cardiovascular: 136
+- nclex_24_leadership_mgt: 119
+- leadership: 114
+- nclex_16_gastrointenstinal: 110
+- nclex_15_endoctrine: 88
+- emergency_care: 79
+- muscoskeletal: 67
+- hematologic: 63
+- psychosocial_integrity: 63
+- nutrition: 62
+- safe_and_effective_care_environment: 55
+- neurological: 50
+- integuement: 48
+- physiological_integrity_basic_care_integrity: 46
+- genital_reproductive: 31
+- nclex_21_immune_system: 30
+- gerontology: 29
+- pre_post_operative: 29
 
 ## Sample Dropped Items
-- id=10010 bank=emergency_care reason=noisy_choice
-- id=10014 bank=emergency_care reason=noisy_choice
-- id=10017 bank=emergency_care reason=noisy_choice
-- id=10018 bank=emergency_care reason=noisy_choice
-- id=10027 bank=emergency_care reason=noisy_choice
-- id=10030 bank=emergency_care reason=noisy_choice
-- id=10031 bank=emergency_care reason=noisy_choice
-- id=10032 bank=emergency_care reason=noisy_choice
-- id=10034 bank=emergency_care reason=noisy_choice
-- id=10035 bank=emergency_care reason=noisy_choice
-- id=10037 bank=emergency_care reason=noisy_choice
+- id=10001 bank=emergency_care reason=noisy_choice
 - id=10039 bank=emergency_care reason=noisy_choice
-- id=10041 bank=emergency_care reason=noisy_choice
-- id=10048 bank=emergency_care reason=noisy_choice
-- id=10050 bank=emergency_care reason=noisy_choice
-- id=10053 bank=emergency_care reason=noisy_choice
-- id=10054 bank=emergency_care reason=noisy_choice
-- id=10055 bank=emergency_care reason=noisy_choice
-- id=10058 bank=emergency_care reason=noisy_choice
-- id=10059 bank=emergency_care reason=noisy_choice
 - id=10067 bank=emergency_care reason=bad_stem
-- id=10068 bank=emergency_care reason=noisy_choice
-- id=10077 bank=emergency_care reason=noisy_choice
-- id=10080 bank=emergency_care reason=noisy_choice
-- id=10089 bank=genital_reproductive reason=noisy_choice
-- id=10095 bank=genital_reproductive reason=noisy_choice
-- id=10096 bank=genital_reproductive reason=noisy_choice
-- id=10100 bank=genital_reproductive reason=noisy_choice
-- id=10115 bank=gerontology reason=noisy_choice
-- id=10116 bank=gerontology reason=noisy_choice
-- id=10126 bank=gerontology reason=noisy_choice
-- id=10131 bank=gerontology reason=noisy_choice
-- id=10142 bank=hematologic reason=noisy_choice
-- id=10152 bank=hematologic reason=noisy_choice
-- id=10157 bank=hematologic reason=noisy_choice
-- id=10162 bank=hematologic reason=noisy_choice
-- id=10166 bank=hematologic reason=noisy_choice
-- id=10175 bank=hematologic reason=noisy_choice
-- id=10177 bank=hematologic reason=noisy_choice
-- id=10188 bank=hematologic reason=noisy_choice
-- id=10194 bank=hematologic reason=noisy_choice
-- id=10198 bank=hematologic reason=noisy_choice
-- id=10213 bank=integuement reason=noisy_choice
-- id=10215 bank=integuement reason=noisy_choice
-- id=10222 bank=integuement reason=noisy_choice
-- id=10224 bank=integuement reason=noisy_choice
-- id=10225 bank=integuement reason=noisy_choice
-- id=10227 bank=integuement reason=noisy_choice
-- id=10233 bank=integuement reason=noisy_choice
-- id=10235 bank=integuement reason=noisy_choice
+- id=10437 bank=ncleex_5 reason=noisy_choice
+- id=10441 bank=ncleex_5 reason=noisy_choice
+- id=10444 bank=ncleex_5 reason=noisy_choice
+- id=10597 bank=nclex_12_cardiovascular reason=noisy_choice
+- id=10598 bank=nclex_12_cardiovascular reason=noisy_choice
+- id=11289 bank=nclex_3 reason=noisy_choice
