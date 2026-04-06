@@ -1,26 +1,24 @@
 # Gold Question Generation Report
 
 - source_rows: 1695
-- kept_rows: 1686
-- dropped_rows: 9
-- repaired_stem: 1677
+- kept_rows: 1695
+- dropped_rows: 0
+- repaired_stem: 1684
 - repaired_correct: 0
-- repaired_rationale: 48
-- dropped_noisy_choice: 8
+- repaired_rationale: 52
+- dropped_noisy_choice: 0
 
 ## Drop Reasons
-- noisy_choice: 8
-- bad_stem: 1
 
 ## Top Banks (kept)
 - nclex_19_health_promotion_maint: 187
+- nclex_12_cardiovascular: 138
 - nclex_10_ante_neonatal_care: 137
-- nclex_12_cardiovascular: 136
 - nclex_24_leadership_mgt: 119
 - leadership: 114
 - nclex_16_gastrointenstinal: 110
 - nclex_15_endoctrine: 88
-- emergency_care: 79
+- emergency_care: 82
 - muscoskeletal: 67
 - hematologic: 63
 - psychosocial_integrity: 63
@@ -35,12 +33,3 @@
 - pre_post_operative: 29
 
 ## Sample Dropped Items
-- id=10001 bank=emergency_care reason=noisy_choice
-- id=10039 bank=emergency_care reason=noisy_choice
-- id=10067 bank=emergency_care reason=bad_stem
-- id=10437 bank=ncleex_5 reason=noisy_choice
-- id=10441 bank=ncleex_5 reason=noisy_choice
-- id=10444 bank=ncleex_5 reason=noisy_choice
-- id=10597 bank=nclex_12_cardiovascular reason=noisy_choice
-- id=10598 bank=nclex_12_cardiovascular reason=noisy_choice
-- id=11289 bank=nclex_3 reason=noisy_choice

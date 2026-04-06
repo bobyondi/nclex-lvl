@@ -132,6 +132,14 @@ def parse_json_maybe(value: str) -> Any:
         return None
 
 
+def first_sentence(text: str) -> str:
+    t = clean_text(text)
+    if not t:
+        return ""
+    m = re.search(r"(.+?[.!?])(\s|$)", t)
+    return m.group(1).strip() if m else t
+
+
 def normalize_choices(raw_choices: str) -> list[dict[str, str]]:
     parsed = parse_json_maybe(raw_choices)
     if not isinstance(parsed, list):
@@ -229,8 +237,6 @@ def is_noisy_choice(text: str) -> bool:
         return True
     if t.lower().startswith(("i ", "ii ", "iii ")):
         return True
-    if len(t) < 4:
-        return True
     return False
 
 
@@ -250,6 +256,9 @@ def build_gold(csv_path: Path) -> tuple[dict[str, list[dict[str, Any]]], list[di
             rationale_raw = row.get("rationale", "")
             why_not_raw = row.get("why_not", "")
             key_concept_raw = row.get("key_concept", "")
+            why_not_parsed = parse_json_maybe(why_not_raw)
+            if not isinstance(why_not_parsed, dict):
+                why_not_parsed = None
 
             correct_letters = parse_correct_letters(row.get("correct", ""))
             choices = normalize_choices(row.get("choices", ""))
@@ -286,6 +295,17 @@ def build_gold(csv_path: Path) -> tuple[dict[str, list[dict[str, Any]]], list[di
             stem = strip_options_from_stem(stem_raw)
             if stem != squash_ws(stem_raw):
                 stats.repaired_stem += 1
+
+            # Salvage corrupted stems using a question-like choice line.
+            if looks_like_garbage(stem):
+                for c in choices:
+                    if c["t"].endswith("?") and len(c["t"]) > 30:
+                        stem = clean_text(c["t"])
+                        # Replace that choice with why_not text if available.
+                        if why_not_parsed and c["id"] in why_not_parsed:
+                            c["t"] = clean_choice_text(str(why_not_parsed[c["id"]]))
+                        break
+
             if looks_like_garbage(stem):
                 stats.dropped_rows += 1
                 stats.dropped_bad_stem += 1
@@ -310,8 +330,17 @@ def build_gold(csv_path: Path) -> tuple[dict[str, list[dict[str, Any]]], list[di
                 rationale = f"Use clinical judgment to prioritize safety and select the best answer based on the client scenario."
                 stats.repaired_rationale += 1
 
-            why_not = parse_json_maybe(why_not_raw)
-            if not isinstance(why_not, dict):
+            # If correct choice is placeholder, infer text from rationale.
+            if isinstance(correct, str):
+                for c in choices:
+                    if c["id"] == correct and "text recovered from OCR is incomplete" in c["t"]:
+                        inferred = first_sentence(rationale)
+                        if len(inferred) >= 20:
+                            c["t"] = inferred
+                        break
+
+            why_not = why_not_parsed
+            if not why_not:
                 why_not = None
             else:
                 norm = {}
