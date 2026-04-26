@@ -1,0 +1,113 @@
+# Markdown Import Report
+
+- total_sections: 4087
+- kept_questions: 3409
+- dropped_questions: 678
+- image_questions: 745
+- copied_images: 745
+- custom_images: 1
+- dropped_complex: 72
+- dropped_missing_choices: 606
+- dropped_missing_correct: 0
+
+## Sample Dropped
+- emergency_care :: Emergency Care Q019 :: missing_choices
+- emergency_care :: Emergency Care Q021 :: missing_choices
+- emergency_care :: Emergency Care Q045 :: missing_choices
+- emergency_care :: Emergency Care Q047 :: missing_choices
+- emergency_care :: Emergency Care Q065 :: missing_choices
+- emergency_care :: Emergency Care Q066 :: missing_choices
+- emergency_care :: Emergency Care Q071 :: missing_choices
+- emergency_care :: Emergency Care Q078 :: missing_choices
+- emergency_care :: Emergency Care Q086 :: missing_choices
+- emergency_care :: Emergency Care Q093 :: missing_choices
+- emergency_care :: Emergency Care Q100 :: missing_choices
+- emergency_care :: Emergency Care Q109 :: missing_choices
+- emergency_care :: Emergency Care Q110 :: missing_choices
+- emergency_care :: Emergency Care Q117 :: missing_choices
+- emergency_care :: Emergency Care Q119 :: missing_choices
+- genital_reproductive :: GENITAL & REPRODUCTIVE Q018 :: missing_choices
+- genital_reproductive :: GENITAL & REPRODUCTIVE Q019 :: missing_choices
+- gerontology :: GERONTOLOGY Q038 :: missing_choices
+- hematologic :: HEMATOLOGIC Q009 :: complex_item
+- hematologic :: HEMATOLOGIC Q016 :: complex_item
+- hematologic :: HEMATOLOGIC Q027 :: missing_choices
+- hematologic :: HEMATOLOGIC Q031 :: complex_item
+- hematologic :: HEMATOLOGIC Q037 :: missing_choices
+- hematologic :: HEMATOLOGIC Q038 :: missing_choices
+- hematologic :: HEMATOLOGIC Q058 :: complex_item
+- hematologic :: HEMATOLOGIC Q063 :: complex_item
+- hematologic :: HEMATOLOGIC Q075 :: missing_choices
+- hematologic :: HEMATOLOGIC Q083 :: complex_item
+- hematologic :: HEMATOLOGIC Q086 :: missing_choices
+- hematologic :: HEMATOLOGIC Q088 :: complex_item
+- hematologic :: HEMATOLOGIC Q095 :: missing_choices
+- hematologic :: HEMATOLOGIC Q101 :: missing_choices
+- integuement :: INTEGUEMENT Q007 :: missing_choices
+- integuement :: INTEGUEMENT Q040 :: missing_choices
+- integuement :: INTEGUEMENT Q073 :: missing_choices
+- integuement :: INTEGUEMENT Q087 :: missing_choices
+- muscoskeletal :: MUSCOSKELETAL Q006 :: missing_choices
+- muscoskeletal :: MUSCOSKELETAL Q009 :: missing_choices
+- muscoskeletal :: MUSCOSKELETAL Q018 :: missing_choices
+- muscoskeletal :: MUSCOSKELETAL Q034 :: missing_choices
+- muscoskeletal :: MUSCOSKELETAL Q061 :: missing_choices
+- muscoskeletal :: MUSCOSKELETAL Q098 :: missing_choices
+- muscoskeletal :: MUSCOSKELETAL Q099 :: missing_choices
+- muscoskeletal :: MUSCOSKELETAL Q105 :: complex_item
+- muscoskeletal :: MUSCOSKELETAL Q106 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q001 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q014 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q019 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q023 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q025 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q026 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q029 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q036 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q038 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q039 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q057 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q060 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q061 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q063 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q065 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q068 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q069 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q070 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q071 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q073 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q074 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q078 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q079 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q081 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q084 :: complex_item
+- ncleex_5 :: NCLEEX 5 Q085 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q098 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q099 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q100 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q102 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q103 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q104 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q105 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q110 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q119 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q120 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q121 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q125 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q133 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q136 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q138 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q139 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q140 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q151 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q153 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q154 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q162 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q163 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q167 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q171 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q180 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q200 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q204 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q206 :: missing_choices
+- ncleex_5 :: NCLEEX 5 Q209 :: missing_choices

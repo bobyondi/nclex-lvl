@@ -104,6 +104,11 @@ export default function PracticeRun({ bank, count = 10, questions, onComplete, o
       </div>
 
       <div className="max-w-[640px] mx-auto flex-1 px-6 pt-7 pb-10" key={idx}>
+        {q.imageUrl && (
+          <div className="mb-5 overflow-hidden rounded-[20px]" style={{ border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", animation: "fadeUp 0.3s ease" }}>
+            <img src={q.imageUrl} alt={q.imageAlt || "Question visual"} style={{ width: "100%", height: "auto", display: "block" }} />
+          </div>
+        )}
         <h2 className="text-[17px] font-semibold leading-relaxed mb-5" style={{ animation: "fadeUp 0.35s ease" }}>{q.stem}</h2>
         <div className="flex flex-col gap-[7px] mb-5">
           {q.choices.map((c) => {

@@ -68,7 +68,7 @@ export async function fetchQuestions(bank: string, count: number): Promise<Quest
 
   const { data, error } = await supabase
     .from("questions")
-    .select("id, bank, cat, stem, choices, correct, rationale, why_not, key_concept")
+    .select("id, bank, cat, stem, choices, correct, rationale, why_not, key_concept, image_url, image_alt")
     .in("bank", bankFilter);
 
   if (!error && data && data.length > 0) {
@@ -81,6 +81,8 @@ export async function fetchQuestions(bank: string, count: number): Promise<Quest
       rationale: row.rationale,
       whyNot: parseJsonMaybe(row.why_not, null),
       keyConcept: row.key_concept,
+      imageUrl: row.image_url ?? undefined,
+      imageAlt: row.image_alt ?? undefined,
     })) as Question[];
 
     const normalized = mapped.map((q, i) => {
