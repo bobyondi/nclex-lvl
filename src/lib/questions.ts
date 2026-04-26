@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { shuffle } from "@/lib/utils";
 import { PRACTICE_BANKS } from "@/data/questionBank";
 import { getSubjectBankIdsByKey } from "@/data/categoryToSubject";
+import { filterRenderableQuestions } from "@/lib/questionQuality";
 
 const parseJsonMaybe = <T,>(value: any, fallback: T): T => {
   if (value === null || value === undefined) return fallback;
@@ -91,14 +92,15 @@ export async function fetchQuestions(bank: string, count: number): Promise<Quest
       if (!repaired) return q;
       return { ...q, ...repaired };
     });
-    return shuffle(normalized).slice(0, count);
+    const renderable = filterRenderableQuestions(normalized);
+    if (renderable.length) return shuffle(renderable).slice(0, count);
   }
 
   if (mappedBanks.length) {
-    const merged = mappedBanks.flatMap((id) => PRACTICE_BANKS[id] || []);
+    const merged = filterRenderableQuestions(mappedBanks.flatMap((id) => PRACTICE_BANKS[id] || []));
     if (merged.length) return shuffle(merged).slice(0, count);
   }
 
-  const local = PRACTICE_BANKS[bank] || PRACTICE_BANKS.mixed || [];
+  const local = filterRenderableQuestions(PRACTICE_BANKS[bank] || PRACTICE_BANKS.mixed || []);
   return shuffle(local).slice(0, count);
 }

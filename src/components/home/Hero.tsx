@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { HERO_QUESTIONS } from "@/data/questions";
 import { PRACTICE_BANKS } from "@/data/questionBank";
 import { getSubjectBankIdsByKey } from "@/data/categoryToSubject";
+import { filterRenderableQuestions } from "@/lib/questionQuality";
 import { shuffle } from "@/lib/utils";
 import type { Question } from "@/types";
 import HeroQuestion from "./HeroQuestion";
@@ -40,7 +41,7 @@ const buildHeroPool = (focus: string): Question[] => {
     : getSubjectBankIdsByKey(focus);
 
   const raw = bankIds.flatMap((id) => PRACTICE_BANKS[id] || []);
-  const valid = raw.filter((q) => q?.stem && q?.choices?.length >= 4 && q?.rationale);
+  const valid = filterRenderableQuestions(raw, { hero: true });
 
   const deduped = new Map<string, Question>();
   for (const q of valid) {
